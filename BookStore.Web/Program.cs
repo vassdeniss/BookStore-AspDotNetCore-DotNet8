@@ -1,7 +1,18 @@
+using BookStore.Web.Data;
+
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<BookStoreDbContext>((options) => 
+    options.UseSqlServer(
+            builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
