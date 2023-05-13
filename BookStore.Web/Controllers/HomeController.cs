@@ -9,18 +9,20 @@ namespace BookStore.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> logger;
 
         public HomeController(ILogger<HomeController> logger)
         {
-            this._logger = logger;
+            this.logger = logger;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return this.View();
         }
 
+        [HttpGet]
         public IActionResult Privacy()
         {
             return this.View();

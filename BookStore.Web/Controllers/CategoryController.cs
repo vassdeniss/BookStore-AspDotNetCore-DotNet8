@@ -17,11 +17,32 @@ namespace BookStore.Web.Controllers
             this.context = context;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             IEnumerable<Category> categories = this.context.Categories.ToList();
 
             return this.View(categories);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Category category)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.context.Categories.Add(category);
+            this.context.SaveChanges();
+
+            return this.RedirectToAction(nameof(Index));
         }
     }
 }
