@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-using BookStore.Infrastructure.Data;
+﻿using BookStore.Infrastructure.Data;
 using BookStore.Infrastructure.Models;
 using BookStore.Infrastructure.Repository.Contracts;
 
@@ -19,11 +17,6 @@ namespace BookStore.Infrastructure.Repository
         public void Update(Category category)
         {
             this.context.Categories.Update(category);
-        }
-
-        public async Task SaveAsync()
-        {
-            await this.context.SaveChangesAsync();
         }
     }
 }

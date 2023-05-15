@@ -11,17 +11,17 @@ namespace BookStore.Web.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ICategoryRepository categoryRepo;
+        private readonly IUnitOfWork unitOfWork;
 
-        public CategoryController(ICategoryRepository categoryRepo)
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            this.categoryRepo = categoryRepo;
+            this.unitOfWork = unitOfWork;
         }
 
         [HttpGet]
         public async Task<IActionResult> IndexAsync()
         {
-            IEnumerable<Category> categories = await this.categoryRepo.GetAllAsync();
+            IEnumerable<Category> categories = await this.unitOfWork.CategoryRepository.GetAllAsync();
 
             return this.View(categories);
         }
@@ -40,8 +40,8 @@ namespace BookStore.Web.Controllers
                 return this.View();
             }
 
-            await this.categoryRepo.AddAsync(category);
-            await this.categoryRepo.SaveAsync();
+            await this.unitOfWork.CategoryRepository.AddAsync(category);
+            await this.unitOfWork.SaveAsync();
 
             this.TempData["SuccessMessage"] = "Category created successfully!";
             return this.RedirectToAction(nameof(IndexAsync));
@@ -55,7 +55,7 @@ namespace BookStore.Web.Controllers
                 return this.NotFound();
             }
 
-            Category? category = await this.categoryRepo.GetByIdAsync(id);
+            Category? category = await this.unitOfWork.CategoryRepository.GetByIdAsync(id);
             if (category is null)
             {
                 return this.NotFound();
@@ -72,8 +72,8 @@ namespace BookStore.Web.Controllers
                 return this.View();
             }
 
-            this.categoryRepo.Update(category);
-            await this.categoryRepo.SaveAsync();
+            this.unitOfWork.CategoryRepository.Update(category);
+            await this.unitOfWork.SaveAsync();
 
             this.TempData["SuccessMessage"] = "Category edited successfully!";
             return this.RedirectToAction(nameof(IndexAsync));
@@ -87,7 +87,7 @@ namespace BookStore.Web.Controllers
                 return this.NotFound();
             }
 
-            Category? category = await this.categoryRepo.GetByIdAsync(id);
+            Category? category = await this.unitOfWork.CategoryRepository.GetByIdAsync(id);
             if (category is null)
             {
                 return this.NotFound();
@@ -100,14 +100,14 @@ namespace BookStore.Web.Controllers
         [ActionName(nameof(DeleteAsync))]
         public async Task<IActionResult> DeletePostAsync(Guid? id)
         {
-            Category? category = await this.categoryRepo.GetByIdAsync(id!);
+            Category? category = await this.unitOfWork.CategoryRepository.GetByIdAsync(id!);
             if (category is null)
             {
                 return this.NotFound();
             }
 
-            this.categoryRepo.Remove(category);
-            await this.categoryRepo.SaveAsync();
+            this.unitOfWork.CategoryRepository.Remove(category);
+            await this.unitOfWork.SaveAsync();
 
             this.TempData["SuccessMessage"] = "Category deleted successfully!";
             return this.RedirectToAction(nameof(IndexAsync));
