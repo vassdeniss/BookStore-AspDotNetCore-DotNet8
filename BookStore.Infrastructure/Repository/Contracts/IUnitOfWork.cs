@@ -6,6 +6,8 @@ namespace BookStore.Infrastructure.Repository.Contracts
     {
         ICategoryRepository CategoryRepository { get; }
 
+        IProductRepository ProductRepository { get; }
+
         Task SaveAsync();
     }
 }

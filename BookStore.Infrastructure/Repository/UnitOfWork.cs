@@ -13,9 +13,12 @@ namespace BookStore.Infrastructure.Repository
         {
             this.context = context;
             this.CategoryRepository = new CategoryRepository(context);
+            this.ProductRepository = new ProductRepository(context);
         }
 
         public ICategoryRepository CategoryRepository { get; }
+
+        public IProductRepository ProductRepository { get; }
 
         public async Task SaveAsync()
         {
