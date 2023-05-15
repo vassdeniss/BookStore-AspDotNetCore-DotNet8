@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BookStore.Web.Migrations
+namespace BookStore.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
     public partial class AddCategoryTable : Migration

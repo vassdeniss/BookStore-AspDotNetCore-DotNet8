@@ -1,5 +1,5 @@
-﻿using BookStore.Web.Data;
-using BookStore.Web.Models;
+﻿using BookStore.Infrastructure.Data;
+using BookStore.Infrastructure.Models;
 
 using Microsoft.AspNetCore.Mvc;
 

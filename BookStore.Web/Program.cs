@@ -1,4 +1,4 @@
-using BookStore.Web.Data;
+using BookStore.Infrastructure.Data;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;

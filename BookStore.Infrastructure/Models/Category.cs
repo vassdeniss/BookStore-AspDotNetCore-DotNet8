@@ -1,8 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace BookStore.Web.Models
+namespace BookStore.Infrastructure.Models
 {
     public class Category
     {
@@ -11,11 +10,8 @@ namespace BookStore.Web.Models
 
         [Required]
         [MaxLength(30)]
-        [DisplayName("Name")]
         public string Name { get; set; } = null!;
 
-        [Range(1, 100, ErrorMessage = "{0} must be between {1}-{2}.")]
-        [DisplayName("Display Order")]
         public int DisplayOrder { get; set; }
     }
 }

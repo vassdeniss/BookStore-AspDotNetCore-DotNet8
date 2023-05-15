@@ -1,10 +1,10 @@
-﻿using BookStore.Web.Models;
+﻿using BookStore.Infrastructure.Models;
 
 using Microsoft.EntityFrameworkCore;
 
 using System;
 
-namespace BookStore.Web.Data
+namespace BookStore.Infrastructure.Data
 {
     public class BookStoreDbContext : DbContext
     {
