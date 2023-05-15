@@ -1,27 +1,27 @@
-﻿using BookStore.Infrastructure.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using BookStore.Infrastructure.Models;
+using BookStore.Infrastructure.Repository.Contracts;
 
 using Microsoft.AspNetCore.Mvc;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace BookStore.Web.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly BookStoreDbContext context;
+        private readonly ICategoryRepository categoryRepo;
 
-        public CategoryController(BookStoreDbContext context)
+        public CategoryController(ICategoryRepository categoryRepo)
         {
-            this.context = context;
+            this.categoryRepo = categoryRepo;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            IEnumerable<Category> categories = this.context.Categories.ToList();
+            IEnumerable<Category> categories = await this.categoryRepo.GetAllAsync();
 
             return this.View(categories);
         }
@@ -33,29 +33,29 @@ namespace BookStore.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Category category)
+        public async Task<IActionResult> CreateAsync(Category category)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            this.context.Categories.Add(category);
-            this.context.SaveChanges();
+            await this.categoryRepo.AddAsync(category);
+            await this.categoryRepo.SaveAsync();
 
             this.TempData["SuccessMessage"] = "Category created successfully!";
-            return this.RedirectToAction(nameof(Index));
+            return this.RedirectToAction(nameof(IndexAsync));
         }
 
         [HttpGet]
-        public IActionResult Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id is null)
             {
                 return this.NotFound();
             }
 
-            Category? category = this.context.Categories.Find(id);
+            Category? category = await this.categoryRepo.GetByIdAsync(id);
             if (category is null)
             {
                 return this.NotFound();
@@ -65,29 +65,29 @@ namespace BookStore.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Category category)
+        public async Task<IActionResult> Edit(Category category)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            this.context.Categories.Update(category);
-            this.context.SaveChanges();
+            this.categoryRepo.Update(category);
+            await this.categoryRepo.SaveAsync();
 
             this.TempData["SuccessMessage"] = "Category edited successfully!";
-            return this.RedirectToAction(nameof(Index));
+            return this.RedirectToAction(nameof(IndexAsync));
         }
 
         [HttpGet]
-        public IActionResult Delete(Guid? id)
+        public async Task<IActionResult> DeleteAsync(Guid? id)
         {
             if (id is null)
             {
                 return this.NotFound();
             }
 
-            Category? category = this.context.Categories.Find(id);
+            Category? category = await this.categoryRepo.GetByIdAsync(id);
             if (category is null)
             {
                 return this.NotFound();
@@ -97,20 +97,20 @@ namespace BookStore.Web.Controllers
         }
 
         [HttpPost]
-        [ActionName(nameof(Delete))]
-        public IActionResult DeletePost(Guid? id)
+        [ActionName(nameof(DeleteAsync))]
+        public async Task<IActionResult> DeletePostAsync(Guid? id)
         {
-            Category? category = this.context.Categories.Find(id);
+            Category? category = await this.categoryRepo.GetByIdAsync(id!);
             if (category is null)
             {
                 return this.NotFound();
             }
 
-            this.context.Categories.Remove(category);
-            this.context.SaveChanges();
+            this.categoryRepo.Remove(category);
+            await this.categoryRepo.SaveAsync();
 
             this.TempData["SuccessMessage"] = "Category deleted successfully!";
-            return this.RedirectToAction(nameof(Index));
+            return this.RedirectToAction(nameof(IndexAsync));
         }
     }
 }

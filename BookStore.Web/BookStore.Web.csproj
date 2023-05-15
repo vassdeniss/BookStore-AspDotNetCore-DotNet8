@@ -17,12 +17,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.0-preview.3.23206.5" />
   </ItemGroup>
   <ItemGroup>
-    <EditorConfigFiles Remove="C:\Users\vassd\source\repos\BookStore\BookStore.Web\.editorconfig" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="C:\Users\vassd\source\repos\BookStore\BookStore.Web\.editorconfig" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\BookStore.Infrastructure\BookStore.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
