@@ -7,9 +7,9 @@ using BookStore.Infrastructure.Repository.Contracts;
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace BookStore.Web.Controllers
+namespace BookStore.Web.Areas.Admin.Controllers
 {
-    public class CategoryController : Controller
+    public class CategoryController : BaseAdminController
     {
         private readonly IUnitOfWork unitOfWork;
 

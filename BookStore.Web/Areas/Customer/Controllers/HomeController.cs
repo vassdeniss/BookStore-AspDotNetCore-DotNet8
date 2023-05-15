@@ -1,13 +1,15 @@
 ﻿using BookStore.Web.Models;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using System.Diagnostics;
 
-namespace BookStore.Web.Controllers
+namespace BookStore.Web.Areas.Customer.Controllers
 {
-    public class HomeController : Controller
+    [AllowAnonymous]
+    public class HomeController : BaseCustomerController
     {
         private readonly ILogger<HomeController> logger;
 

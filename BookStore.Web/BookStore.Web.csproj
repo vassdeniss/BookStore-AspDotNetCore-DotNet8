@@ -19,4 +19,11 @@
   <ItemGroup>
     <ProjectReference Include="..\BookStore.Infrastructure\BookStore.Infrastructure.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Customer\Data\" />
+    <Folder Include="Areas\Customer\Models\" />
+    <Folder Include="Controllers\" />
+  </ItemGroup>
 </Project>
