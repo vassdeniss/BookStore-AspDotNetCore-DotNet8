@@ -1,4 +1,4 @@
-﻿using BookStore.Web.Models;
+﻿using BookStore.Web.ViewModels;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

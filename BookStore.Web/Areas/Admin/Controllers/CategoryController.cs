@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using BookStore.Infrastructure.Models;
 using BookStore.Infrastructure.Repository.Contracts;
+using BookStore.Web.ViewModels;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,18 +34,24 @@ namespace BookStore.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(Category category)
+        public async Task<IActionResult> CreateAsync(CategoryViewModel category)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            await this.unitOfWork.CategoryRepository.AddAsync(category);
+            Category dbCategory = new Category()
+            {
+                Name = category.Name,
+                DisplayOrder = category.DisplayOrder,
+            };
+
+            await this.unitOfWork.CategoryRepository.AddAsync(dbCategory);
             await this.unitOfWork.SaveAsync();
 
             this.TempData["SuccessMessage"] = "Category created successfully!";
-            return this.RedirectToAction(nameof(IndexAsync));
+            return this.RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -61,22 +68,35 @@ namespace BookStore.Web.Areas.Admin.Controllers
                 return this.NotFound();
             }
 
-            return this.View(category);
+            CategoryViewModel categoryViewModel = new CategoryViewModel
+            {
+                Id = category.Id,
+                Name = category.Name,
+                DisplayOrder = category.DisplayOrder,
+            };
+
+            return this.View(categoryViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Category category)
+        public async Task<IActionResult> Edit(CategoryViewModel category)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            this.unitOfWork.CategoryRepository.Update(category);
+            Category dbCategory = (await this.unitOfWork.CategoryRepository.GetByIdAsync(category.Id))!;
+
+            dbCategory.Name = category.Name;
+            dbCategory.DisplayOrder = category.DisplayOrder;
+
+            this.unitOfWork.CategoryRepository.Update(dbCategory);
+
             await this.unitOfWork.SaveAsync();
 
             this.TempData["SuccessMessage"] = "Category edited successfully!";
-            return this.RedirectToAction(nameof(IndexAsync));
+            return this.RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -93,11 +113,18 @@ namespace BookStore.Web.Areas.Admin.Controllers
                 return this.NotFound();
             }
 
-            return this.View(category);
+            CategoryViewModel categoryViewModel = new CategoryViewModel
+            {
+                Id = category.Id,
+                Name = category.Name,
+                DisplayOrder = category.DisplayOrder,
+            };
+
+            return this.View(categoryViewModel);
         }
 
         [HttpPost]
-        [ActionName(nameof(DeleteAsync))]
+        [ActionName("Delete")]
         public async Task<IActionResult> DeletePostAsync(Guid? id)
         {
             Category? category = await this.unitOfWork.CategoryRepository.GetByIdAsync(id!);
@@ -110,7 +137,7 @@ namespace BookStore.Web.Areas.Admin.Controllers
             await this.unitOfWork.SaveAsync();
 
             this.TempData["SuccessMessage"] = "Category deleted successfully!";
-            return this.RedirectToAction(nameof(IndexAsync));
+            return this.RedirectToAction("Index");
         }
     }
 }

@@ -2,15 +2,14 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace BookStore.Web.Models
+namespace BookStore.Web.ViewModels
 {
-    public class Category2
+    public class CategoryViewModel
     {
-        [Key]
         public Guid Id { get; set; }
 
         [Required]
-        [MaxLength(30)]
+        [StringLength(30, MinimumLength = 1, ErrorMessage = "{0} must be between {1}-{2}.")]
         [DisplayName("Name")]
         public string Name { get; set; } = null!;
 
