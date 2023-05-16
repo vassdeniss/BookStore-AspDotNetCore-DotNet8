@@ -4,6 +4,7 @@ using BookStore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookStore.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(BookStoreDbContext))]
-    partial class BookStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230516103220_AddProductForeignKey")]
+    partial class AddProductForeignKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,19 +46,19 @@ namespace BookStore.Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("7e9203c2-de44-4ea1-b3cc-3dc4680fd1f8"),
+                            Id = new Guid("1e1dcf31-80b2-4346-812f-f9c6a2faca2b"),
                             DisplayOrder = 1,
                             Name = "Fantasy"
                         },
                         new
                         {
-                            Id = new Guid("fe6100e6-3f3f-434d-92b7-eb163b733a04"),
+                            Id = new Guid("d4d6b6b0-9427-41cd-ae03-d8c278e943bf"),
                             DisplayOrder = 2,
                             Name = "Sci-fi"
                         },
                         new
                         {
-                            Id = new Guid("ab42220e-0698-480e-bb9f-592b352ab7fa"),
+                            Id = new Guid("76667001-35f7-49f5-ac7e-19337a4c43d5"),
                             DisplayOrder = 3,
                             Name = "Action"
                         });
@@ -84,9 +87,6 @@ namespace BookStore.Infrastructure.Data.Migrations
                         .HasMaxLength(26)
                         .HasColumnType("nvarchar(26)");
 
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<double>("ListPrice")
                         .HasColumnType("float");
 
@@ -112,12 +112,11 @@ namespace BookStore.Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("23752b87-c7b3-4778-b41c-25d87b4c2914"),
+                            Id = new Guid("1aede173-5896-43c8-a89f-b056403093bb"),
                             Author = "Billy Spark",
-                            CategoryId = new Guid("7e9203c2-de44-4ea1-b3cc-3dc4680fd1f8"),
+                            CategoryId = new Guid("1e1dcf31-80b2-4346-812f-f9c6a2faca2b"),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "SWD9999001",
-                            ImageUrl = "",
                             ListPrice = 99.0,
                             Price = 90.0,
                             Price100 = 80.0,
@@ -126,12 +125,11 @@ namespace BookStore.Infrastructure.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("45e61c94-26f3-45ec-b4d6-41f2a3c12b68"),
+                            Id = new Guid("ef3d6021-4408-4bd9-a297-d4aa2918fa30"),
                             Author = "Nancy Hoover",
-                            CategoryId = new Guid("7e9203c2-de44-4ea1-b3cc-3dc4680fd1f8"),
+                            CategoryId = new Guid("1e1dcf31-80b2-4346-812f-f9c6a2faca2b"),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "CAW777777701",
-                            ImageUrl = "",
                             ListPrice = 40.0,
                             Price = 30.0,
                             Price100 = 20.0,
@@ -140,12 +138,11 @@ namespace BookStore.Infrastructure.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("09e809f8-d65f-40df-ba20-6530497d67d3"),
+                            Id = new Guid("711dcbd5-f1ba-4453-89ac-626918452944"),
                             Author = "Julian Button",
-                            CategoryId = new Guid("fe6100e6-3f3f-434d-92b7-eb163b733a04"),
+                            CategoryId = new Guid("d4d6b6b0-9427-41cd-ae03-d8c278e943bf"),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "RITO5555501",
-                            ImageUrl = "",
                             ListPrice = 55.0,
                             Price = 50.0,
                             Price100 = 35.0,
@@ -154,12 +151,11 @@ namespace BookStore.Infrastructure.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("c2ea6208-fd54-414b-af9d-46441d599648"),
+                            Id = new Guid("1fe99f82-bc3b-496a-b329-05808869df3f"),
                             Author = "Abby Muscles",
-                            CategoryId = new Guid("fe6100e6-3f3f-434d-92b7-eb163b733a04"),
+                            CategoryId = new Guid("d4d6b6b0-9427-41cd-ae03-d8c278e943bf"),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "WS3333333301",
-                            ImageUrl = "",
                             ListPrice = 70.0,
                             Price = 65.0,
                             Price100 = 55.0,
@@ -168,12 +164,11 @@ namespace BookStore.Infrastructure.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("edcaf335-73a6-4231-84d4-0f5661a04a80"),
+                            Id = new Guid("72557c0a-b755-4c2c-94b9-1afdfe7cef7f"),
                             Author = "Ron Parker",
-                            CategoryId = new Guid("ab42220e-0698-480e-bb9f-592b352ab7fa"),
+                            CategoryId = new Guid("76667001-35f7-49f5-ac7e-19337a4c43d5"),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "SOTJ1111111101",
-                            ImageUrl = "",
                             ListPrice = 30.0,
                             Price = 27.0,
                             Price100 = 20.0,
@@ -182,12 +177,11 @@ namespace BookStore.Infrastructure.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("ec71d421-222a-40a5-a7f3-a57dcbf8a629"),
+                            Id = new Guid("dc0e866b-69f1-459c-94f8-dba3d344e391"),
                             Author = "Laura Phantom",
-                            CategoryId = new Guid("ab42220e-0698-480e-bb9f-592b352ab7fa"),
+                            CategoryId = new Guid("76667001-35f7-49f5-ac7e-19337a4c43d5"),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "FOT000000001",
-                            ImageUrl = "",
                             ListPrice = 25.0,
                             Price = 23.0,
                             Price100 = 20.0,

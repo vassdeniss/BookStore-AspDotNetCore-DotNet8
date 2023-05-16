@@ -22,26 +22,28 @@ namespace BookStore.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Category>()
-                .HasData(new Category()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Fantasy",
-                    DisplayOrder = 1,
-                },
-                new Category()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Sci-fi",
-                    DisplayOrder = 2,
-                },
-                new Category()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Action",
-                    DisplayOrder = 3,
-                });
+            Category fantasy = new Category()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Fantasy",
+                DisplayOrder = 1,
+            };
+            Category scifi = new Category()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Sci-fi",
+                DisplayOrder = 2,
+            };
+            Category action = new Category()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Action",
+                DisplayOrder = 3,
+            };
 
+            modelBuilder.Entity<Category>()
+                .HasData(fantasy, scifi, action);
+            
             modelBuilder.Entity<Product>().HasData(
                new Product
                {
@@ -53,7 +55,9 @@ namespace BookStore.Infrastructure.Data
                    ListPrice = 99,
                    Price = 90,
                    Price50 = 85,
-                   Price100 = 80
+                   Price100 = 80,
+                   ImageUrl = string.Empty,
+                   CategoryId = fantasy.Id,
                },
                new Product
                {
@@ -65,7 +69,9 @@ namespace BookStore.Infrastructure.Data
                    ListPrice = 40,
                    Price = 30,
                    Price50 = 25,
-                   Price100 = 20
+                   Price100 = 20,
+                   ImageUrl = string.Empty,
+                   CategoryId = fantasy.Id,
                },
                new Product
                {
@@ -77,7 +83,9 @@ namespace BookStore.Infrastructure.Data
                    ListPrice = 55,
                    Price = 50,
                    Price50 = 40,
-                   Price100 = 35
+                   Price100 = 35,
+                   ImageUrl = string.Empty,
+                   CategoryId = scifi.Id,
                },
                new Product
                {
@@ -89,7 +97,9 @@ namespace BookStore.Infrastructure.Data
                    ListPrice = 70,
                    Price = 65,
                    Price50 = 60,
-                   Price100 = 55
+                   Price100 = 55,
+                   ImageUrl = string.Empty,
+                   CategoryId = scifi.Id,
                },
                new Product
                {
@@ -101,7 +111,9 @@ namespace BookStore.Infrastructure.Data
                    ListPrice = 30,
                    Price = 27,
                    Price50 = 25,
-                   Price100 = 20
+                   Price100 = 20,
+                   ImageUrl = string.Empty,
+                   CategoryId = action.Id,
                },
                new Product
                {
@@ -113,7 +125,9 @@ namespace BookStore.Infrastructure.Data
                    ListPrice = 25,
                    Price = 23,
                    Price50 = 22,
-                   Price100 = 20
+                   Price100 = 20,
+                   ImageUrl = string.Empty,
+                   CategoryId = action.Id,
                });
         }
     }

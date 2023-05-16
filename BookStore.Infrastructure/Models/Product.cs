@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookStore.Infrastructure.Models
 {
@@ -33,5 +34,13 @@ namespace BookStore.Infrastructure.Models
 
         [Required]
         public double Price100 { get; set; }
+
+        public string? ImageUrl { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(Category))]
+        public Guid CategoryId { get; set; }
+
+        public virtual Category Category { get; set; } = null!;
     }
 }
