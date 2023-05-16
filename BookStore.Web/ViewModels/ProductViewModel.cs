@@ -1,5 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookStore.Web.ViewModels
 {
@@ -40,5 +43,15 @@ namespace BookStore.Web.ViewModels
         [Display(Name = "Price for 100+")]
         [Range(1, 1000)]
         public double Price100 { get; set; }
+
+        [Display(Name = "Image")]
+        public string? ImageUrl { get; set; }
+
+        [Required]
+        [Display(Name ="Category")]
+        public Guid CategoryId { get; set; }
+
+        [ValidateNever]
+        public IEnumerable<CategoryViewModel> Categories { get; set; } = null!;
     }
 }
