@@ -28,7 +28,7 @@ namespace BookStore.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexAsync()
         {
-            IEnumerable<Product> dbProducts = await this.unitOfWork.ProductRepository.GetAllAsync();
+            IEnumerable<Product> dbProducts = await this.unitOfWork.ProductRepository.GetAllAsync("Category");
 
             IEnumerable<ProductViewModel> products = dbProducts.Select((product) => new ProductViewModel
             {
@@ -41,6 +41,7 @@ namespace BookStore.Web.Areas.Admin.Controllers
                 Price = product.Price,
                 Price50 = product.Price50,
                 Price100 = product.Price100,
+                Category = product.Category,
             });
 
             return this.View(products);
@@ -144,28 +145,11 @@ namespace BookStore.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> DeleteAsync(Guid? id)
+        public async Task<IActionResult> GetAllAsync()
         {
-            if (id is null)
-            {
-                return this.NotFound();
-            }
+            IEnumerable<Product> dbProducts = await this.unitOfWork.ProductRepository.GetAllAsync("Category");
 
-            IEnumerable<Category> dbCategories = await this.unitOfWork.CategoryRepository.GetAllAsync();
-            IEnumerable<CategoryViewModel> categoryList = dbCategories.Select((category) => new CategoryViewModel
-            {
-                Id = category.Id,
-                Name = category.Name,
-                DisplayOrder = category.DisplayOrder,
-            });
-
-            Product? product = await this.unitOfWork.ProductRepository.GetByIdAsync(id);
-            if (product is null)
-            {
-                return this.NotFound();
-            }
-
-            ProductViewModel productViewModel = new ProductViewModel
+            IEnumerable<ProductViewModel> products = dbProducts.Select((product) => new ProductViewModel
             {
                 Id = product.Id,
                 Title = product.Title,
@@ -176,22 +160,19 @@ namespace BookStore.Web.Areas.Admin.Controllers
                 Price = product.Price,
                 Price50 = product.Price50,
                 Price100 = product.Price100,
-                CategoryId = product.CategoryId,
-                Categories = categoryList,
-                ImageUrl = product.ImageUrl,
-            };
+                Category = product.Category,
+            });
 
-            return this.View(productViewModel);
+            return this.Json(new { data = products });
         }
 
-        [HttpPost]
-        [ActionName("Delete")]
-        public async Task<IActionResult> DeletePostAsync(Guid? id)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAsync(Guid? id)
         {
             Product? product = await this.unitOfWork.ProductRepository.GetByIdAsync(id!);
             if (product is null)
             {
-                return this.NotFound();
+                return this.Json(new { success = false, message = "Error while deleting." });
             }
 
             if (!string.IsNullOrEmpty(product.ImageUrl))
@@ -207,8 +188,7 @@ namespace BookStore.Web.Areas.Admin.Controllers
             this.unitOfWork.ProductRepository.Remove(product);
             await this.unitOfWork.SaveAsync();
 
-            this.TempData["SuccessMessage"] = "Product deleted successfully!";
-            return this.RedirectToAction("Index");
+            return this.Json(new { success = true, message = "Delete successful." });
         }
     }
 }

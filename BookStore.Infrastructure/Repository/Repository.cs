@@ -8,6 +8,8 @@ using BookStore.Infrastructure.Data;
 using BookStore.Infrastructure.Repository.Contracts;
 using Microsoft.EntityFrameworkCore;
 
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+
 namespace BookStore.Infrastructure.Repository
 {
     public class Repository<T> : IRepository<T>
@@ -22,9 +24,18 @@ namespace BookStore.Infrastructure.Repository
             this.dbSet = this.context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync(string? includes = null)
         {
             IQueryable<T> query = this.dbSet;
+
+            if (!string.IsNullOrEmpty(includes))
+            {
+                foreach (string include in includes.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(include);
+                }
+            }
+
             return await query.ToListAsync();
         }
 
@@ -33,9 +44,18 @@ namespace BookStore.Infrastructure.Repository
             return await this.dbSet.FindAsync(id);
         }
 
-        public async Task<T?> GetAsync(Expression<Func<T, bool>> filter)
+        public async Task<T?> GetAsync(Expression<Func<T, bool>> filter, string? includes = null)
         {
             IQueryable<T> query = this.dbSet;
+
+            if (!string.IsNullOrEmpty(includes))
+            {
+                foreach (string include in includes.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(include);
+                }
+            }
+
             return await query.Where(filter).FirstOrDefaultAsync();
         }
 

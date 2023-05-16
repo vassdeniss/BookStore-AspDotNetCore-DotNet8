@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+﻿using BookStore.Infrastructure.Models;
+
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 using System;
 using System.Collections.Generic;
@@ -50,6 +52,10 @@ namespace BookStore.Web.ViewModels
         [Required]
         [Display(Name ="Category")]
         public Guid CategoryId { get; set; }
+
+        // TODO: VM
+        [ValidateNever]
+        public Category Category { get; set; } = null!;
 
         [ValidateNever]
         public IEnumerable<CategoryViewModel> Categories { get; set; } = null!;

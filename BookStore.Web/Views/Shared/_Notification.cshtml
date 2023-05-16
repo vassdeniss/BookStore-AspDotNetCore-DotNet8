@@ -1,7 +1,7 @@
 ﻿@if (this.TempData["SuccessMessage"] is not null)
 {
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"><script>
     <script>
         toastr.success('@this.TempData["SuccessMessage"]');
     </script>

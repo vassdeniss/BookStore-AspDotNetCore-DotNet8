@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace BookStore.Infrastructure.Models
 {
@@ -20,6 +21,8 @@ namespace BookStore.Infrastructure.Models
 
         public int DisplayOrder { get; set; }
 
+        // TODO: Temp
+        [JsonIgnore]
         public virtual ICollection<Product> Products { get; set; }
     }
 }
