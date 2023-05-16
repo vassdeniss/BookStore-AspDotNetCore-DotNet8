@@ -49,23 +49,29 @@ namespace BookStore.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(CategoryViewModel category)
+        public async Task<IActionResult> CreateAsync(ProductViewModel product)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            Category dbCategory = new Category()
+            Product dbProduct = new Product()
             {
-                Name = category.Name,
-                DisplayOrder = category.DisplayOrder,
+                Title = product.Title,
+                Description = product.Description,
+                ISBN = product.ISBN,
+                Author = product.Author,
+                ListPrice = product.ListPrice,
+                Price = product.Price,
+                Price50 = product.Price50,
+                Price100 = product.Price100,
             };
 
-            await this.unitOfWork.CategoryRepository.AddAsync(dbCategory);
+            await this.unitOfWork.ProductRepository.AddAsync(dbProduct);
             await this.unitOfWork.SaveAsync();
 
-            this.TempData["SuccessMessage"] = "Category created successfully!";
+            this.TempData["SuccessMessage"] = "Product created successfully!";
             return this.RedirectToAction("Index");
         }
 
@@ -77,40 +83,52 @@ namespace BookStore.Web.Areas.Admin.Controllers
                 return this.NotFound();
             }
 
-            Category? category = await this.unitOfWork.CategoryRepository.GetByIdAsync(id);
-            if (category is null)
+            Product? product = await this.unitOfWork.ProductRepository.GetByIdAsync(id);
+            if (product is null)
             {
                 return this.NotFound();
             }
 
-            CategoryViewModel categoryViewModel = new CategoryViewModel
+            ProductViewModel productViewModel = new ProductViewModel
             {
-                Id = category.Id,
-                Name = category.Name,
-                DisplayOrder = category.DisplayOrder,
+                Id = product.Id,
+                Title = product.Title,
+                Description = product.Description,
+                ISBN = product.ISBN,
+                Author = product.Author,
+                ListPrice = product.ListPrice,
+                Price = product.Price,
+                Price50 = product.Price50,
+                Price100 = product.Price100,
             };
 
-            return this.View(categoryViewModel);
+            return this.View(productViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(CategoryViewModel category)
+        public async Task<IActionResult> Edit(ProductViewModel product)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            Category dbCategory = (await this.unitOfWork.CategoryRepository.GetByIdAsync(category.Id))!;
+            Product dbProduct = (await this.unitOfWork.ProductRepository.GetByIdAsync(product.Id))!;
 
-            dbCategory.Name = category.Name;
-            dbCategory.DisplayOrder = category.DisplayOrder;
+            dbProduct.Title = product.Title;
+            dbProduct.Description = product.Description;
+            dbProduct.ISBN = product.ISBN;
+            dbProduct.Author = product.Author;
+            dbProduct.ListPrice = product.ListPrice;
+            dbProduct.Price = product.Price;
+            dbProduct.Price50 = product.Price50;
+            dbProduct.Price100 = product.Price100;
 
-            this.unitOfWork.CategoryRepository.Update(dbCategory);
+            this.unitOfWork.ProductRepository.Update(dbProduct);
 
             await this.unitOfWork.SaveAsync();
 
-            this.TempData["SuccessMessage"] = "Category edited successfully!";
+            this.TempData["SuccessMessage"] = "Product edited successfully!";
             return this.RedirectToAction("Index");
         }
 
@@ -122,36 +140,42 @@ namespace BookStore.Web.Areas.Admin.Controllers
                 return this.NotFound();
             }
 
-            Category? category = await this.unitOfWork.CategoryRepository.GetByIdAsync(id);
-            if (category is null)
+            Product? product = await this.unitOfWork.ProductRepository.GetByIdAsync(id);
+            if (product is null)
             {
                 return this.NotFound();
             }
 
-            CategoryViewModel categoryViewModel = new CategoryViewModel
+            ProductViewModel productViewModel = new ProductViewModel
             {
-                Id = category.Id,
-                Name = category.Name,
-                DisplayOrder = category.DisplayOrder,
+                Id = product.Id,
+                Title = product.Title,
+                Description = product.Description,
+                ISBN = product.ISBN,
+                Author = product.Author,
+                ListPrice = product.ListPrice,
+                Price = product.Price,
+                Price50 = product.Price50,
+                Price100 = product.Price100,
             };
 
-            return this.View(categoryViewModel);
+            return this.View(productViewModel);
         }
 
         [HttpPost]
         [ActionName("Delete")]
         public async Task<IActionResult> DeletePostAsync(Guid? id)
         {
-            Category? category = await this.unitOfWork.CategoryRepository.GetByIdAsync(id!);
-            if (category is null)
+            Product? product = await this.unitOfWork.ProductRepository.GetByIdAsync(id!);
+            if (product is null)
             {
                 return this.NotFound();
             }
 
-            this.unitOfWork.CategoryRepository.Remove(category);
+            this.unitOfWork.ProductRepository.Remove(product);
             await this.unitOfWork.SaveAsync();
 
-            this.TempData["SuccessMessage"] = "Category deleted successfully!";
+            this.TempData["SuccessMessage"] = "Product deleted successfully!";
             return this.RedirectToAction("Index");
         }
     }
