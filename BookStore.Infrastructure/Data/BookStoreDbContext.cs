@@ -1,12 +1,14 @@
 ﻿using BookStore.Infrastructure.Models;
 
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 using System;
 
 namespace BookStore.Infrastructure.Data
 {
-    public class BookStoreDbContext : DbContext
+    public class BookStoreDbContext : IdentityDbContext<BookStoreUser, IdentityRole<Guid>, Guid>
     {
         public BookStoreDbContext(DbContextOptions<BookStoreDbContext> options)
             : base(options)
