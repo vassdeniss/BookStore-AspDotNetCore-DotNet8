@@ -41,6 +41,8 @@ namespace BookStore.Web.Areas.Admin.Controllers
                 Price = product.Price,
                 Price50 = product.Price50,
                 Price100 = product.Price100,
+                ImageUrl = product.ImageUrl,
+                CategoryId = product.CategoryId,
                 Category = product.Category,
             });
 
@@ -160,6 +162,8 @@ namespace BookStore.Web.Areas.Admin.Controllers
                 Price = product.Price,
                 Price50 = product.Price50,
                 Price100 = product.Price100,
+                ImageUrl = product.ImageUrl,
+                CategoryId = product.CategoryId,
                 Category = product.Category,
             });
 
@@ -188,6 +192,32 @@ namespace BookStore.Web.Areas.Admin.Controllers
             this.unitOfWork.ProductRepository.Remove(product);
             await this.unitOfWork.SaveAsync();
 
+            return this.Json(new { success = true, message = "Delete successful." });
+        }
+
+        [HttpPatch]
+        public async Task<IActionResult> DeleteImageAsync(Guid? id)
+        {
+            Product? product = await this.unitOfWork.ProductRepository.GetByIdAsync(id!);
+            if (product is null)
+            {
+                return this.Json(new { success = false, message = "Error while deleting." });
+            }
+
+            if (!string.IsNullOrEmpty(product.ImageUrl))
+            {
+                string wwwRootPath = this.webHostEnvironment.WebRootPath;
+                string oldImagePath = Path.Combine(wwwRootPath, product.ImageUrl.TrimStart('\\'));
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+            }
+
+            product.ImageUrl = null;
+            this.unitOfWork.ProductRepository.Update(product);
+            await this.unitOfWork.SaveAsync();
+            
             return this.Json(new { success = true, message = "Delete successful." });
         }
     }

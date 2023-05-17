@@ -94,9 +94,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-2">
-                    <img src="@this.Model.ImageUrl" width="100%" style="border-radius: 5px; border: 1px solid #bbb9b9" />
-                </div>
+                @if (!string.IsNullOrEmpty(this.Model.ImageUrl))
+                {
+                    <div class="col-2" id="productImage">
+                        <img src="@this.Model.ImageUrl" width="100%" style="border-radius: 5px; border: 1px solid #bbb9b9" />
+                        <a onClick=deleteImage('/admin/product/deleteimage/@this.Model.Id') class="btn btn-danger my-2 col-12">Delete Image</a>
+                    </div>
+                }
             </div>
         </form>
     </div>
@@ -115,6 +119,31 @@
                 { value: 'Email', title: 'Email' },
             ]
         });
+
+        function deleteImage(url) {
+            Swal.fire({
+                title: 'Are you sure you want to delete this products image?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it permenantly!',
+            }).then((result) => {
+                if (result.isDismissed) {
+                    return;
+                }
+
+                $.ajax({
+                    url: url,
+                    type: 'PATCH',
+                    success: function (data) {
+                        $('#productImage').remove();
+                        toastr.success(data.message);
+                    },
+                });
+            });
+        }
     </script>
     @{
         <partial name="_ValidationScriptsPartial" />

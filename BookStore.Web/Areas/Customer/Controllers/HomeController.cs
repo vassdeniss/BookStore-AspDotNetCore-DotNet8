@@ -1,27 +1,49 @@
-﻿using BookStore.Web.ViewModels;
+﻿using BookStore.Infrastructure.Models;
+using BookStore.Infrastructure.Repository.Contracts;
+using BookStore.Web.ViewModels;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BookStore.Web.Areas.Customer.Controllers
 {
     [AllowAnonymous]
     public class HomeController : BaseCustomerController
     {
-        private readonly ILogger<HomeController> logger;
+        private readonly IUnitOfWork unitOfWork;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IUnitOfWork unitOfWork)
         {
-            this.logger = logger;
+            this.unitOfWork = unitOfWork;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return this.View();
+            IEnumerable<Product> dbProducts = await this.unitOfWork.ProductRepository.GetAllAsync("Category");
+
+            IEnumerable<ProductViewModel> products = dbProducts.Select((product) => new ProductViewModel
+            {
+                Id = product.Id,
+                Title = product.Title,
+                Description = product.Description,
+                ISBN = product.ISBN,
+                Author = product.Author,
+                ListPrice = product.ListPrice,
+                Price = product.Price,
+                Price50 = product.Price50,
+                Price100 = product.Price100,
+                ImageUrl = product.ImageUrl,
+                CategoryId = product.CategoryId,
+                Category = product.Category,
+            });
+
+            return this.View(products);
         }
 
         [HttpGet]

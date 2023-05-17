@@ -1,4 +1,4 @@
-﻿@model List<Category>
+﻿@model IEnumerable<CategoryViewModel>
 
 <div class="card shadow border-0 mt-4">
     <div class="card-header bg-secondary bg-gradient ml-0 py-3">
@@ -18,7 +18,6 @@
                 </a>
             </div>
         </div>
-
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
@@ -32,7 +31,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (Category category in this.Model.OrderBy(c => c.DisplayOrder))
+                @foreach (CategoryViewModel category in this.Model.OrderBy(c => c.DisplayOrder))
                 {
                     <tr>
                         <td>@category.Name</td>

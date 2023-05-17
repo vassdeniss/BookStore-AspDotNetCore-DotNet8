@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using BookStore.Infrastructure.Models;
@@ -22,7 +23,12 @@ namespace BookStore.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexAsync()
         {
-            IEnumerable<Category> categories = await this.unitOfWork.CategoryRepository.GetAllAsync();
+            IEnumerable<Category> dbCategories = await this.unitOfWork.CategoryRepository.GetAllAsync();
+            IEnumerable<CategoryViewModel> categories = dbCategories.Select((category) => new CategoryViewModel
+            {
+                Name = category.Name,
+                DisplayOrder = category.DisplayOrder,
+            });
 
             return this.View(categories);
         }
