@@ -5,6 +5,7 @@ using BookStore.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -44,6 +45,40 @@ namespace BookStore.Web.Areas.Customer.Controllers
             });
 
             return this.View(products);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DetailsAsync(Guid? id)
+        {
+            if (id is null)
+            {
+                return this.NotFound();
+            }
+
+            Product? dbProduct = await this.unitOfWork.ProductRepository
+                .GetAsync((p) => p.Id == id, "Category");
+            if (dbProduct is null)
+            {
+                return this.NotFound();
+            }
+
+            ProductViewModel product = new ProductViewModel
+            {
+                Id = dbProduct.Id,
+                Title = dbProduct.Title,
+                Description = dbProduct.Description,
+                ISBN = dbProduct.ISBN,
+                Author = dbProduct.Author,
+                ListPrice = dbProduct.ListPrice,
+                Price = dbProduct.Price,
+                Price50 = dbProduct.Price50,
+                Price100 = dbProduct.Price100,
+                CategoryId = dbProduct.CategoryId,
+                ImageUrl = dbProduct.ImageUrl,
+                Category = dbProduct.Category,
+            };
+
+            return this.View(product);
         }
 
         [HttpGet]
