@@ -10,6 +10,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity;
 using System;
 using BookStore.Infrastructure.Models;
+using BookStore.Web.Extensions;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using BookStore.Common;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -21,10 +24,12 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 builder.Services.AddDbContext<BookStoreDbContext>((options) => 
     options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<BookStoreUser>()
-    .AddEntityFrameworkStores<BookStoreDbContext>();
+builder.Services.AddIdentity<BookStoreUser, IdentityRole<Guid>>()
+    .AddEntityFrameworkStores<BookStoreDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 WebApplication app = builder.Build();
 
@@ -43,6 +48,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.SeedRoles();
 
 app.MapRazorPages();
 app.MapControllerRoute(

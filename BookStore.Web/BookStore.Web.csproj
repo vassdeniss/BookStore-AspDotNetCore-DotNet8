@@ -19,6 +19,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.0-preview.3.23206.5" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BookStore.Common\BookStore.Common.csproj" />
     <ProjectReference Include="..\BookStore.Infrastructure\BookStore.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
