@@ -13,12 +13,12 @@ namespace BookStore.Web.Areas.Identity.Pages.Account.Manage
 {
     public class SetPasswordModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<BookStoreUser> _userManager;
+        private readonly SignInManager<BookStoreUser> _signInManager;
 
         public SetPasswordModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            UserManager<BookStoreUser> userManager,
+            SignInManager<BookStoreUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

@@ -1,10 +1,10 @@
 ﻿namespace BookStore.Common
 {
-    public class Roles
+    public static class Roles
     {
-        public static string Customer = "Customer";
-        public static string Company = "Company";
-        public static string Admin = "Admin";
-        public static string Employee = "Employee";
+        public const string Customer = "Customer";
+        public const string Company = "Company";
+        public const string Admin = "Admin";
+        public const string Employee = "Employee";
     }
 }

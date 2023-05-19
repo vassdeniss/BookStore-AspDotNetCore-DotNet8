@@ -5,6 +5,9 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+
+using BookStore.Infrastructure.Models;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,13 +17,13 @@ namespace BookStore.Web.Areas.Identity.Pages.Account.Manage
 {
     public class ChangePasswordModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<BookStoreUser> _userManager;
+        private readonly SignInManager<BookStoreUser> _signInManager;
         private readonly ILogger<ChangePasswordModel> _logger;
 
         public ChangePasswordModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<BookStoreUser> userManager,
+            SignInManager<BookStoreUser> signInManager,
             ILogger<ChangePasswordModel> logger)
         {
             _userManager = userManager;

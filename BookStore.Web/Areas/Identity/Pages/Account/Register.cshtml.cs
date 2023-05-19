@@ -80,6 +80,19 @@ namespace BookStore.Web.Areas.Identity.Pages.Account
 
             [ValidateNever]
             public IEnumerable<SelectListItem> Roles { get; set; }
+
+            [Required]
+            public string Name { get; set; }
+
+            public string? StreetAddress { get; set; }
+
+            public string? City { get; set; }
+
+            public string? State { get; set; }
+
+            public string? PostalCode { get; set; }
+
+            public string? PhoneNumber { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -109,7 +122,15 @@ namespace BookStore.Web.Areas.Identity.Pages.Account
 
                 await this.userStore.SetUserNameAsync(user, this.Input.Email, CancellationToken.None);
                 await this.emailStore.SetEmailAsync(user, this.Input.Email, CancellationToken.None);
-                var result = await this.userManager.CreateAsync(user, this.Input.Password);
+
+                user.StreetAddress = this.Input.StreetAddress;
+                user.City = this.Input.City;
+                user.Name = this.Input.Name;
+                user.State = this.Input.State;
+                user.PostalCode = this.Input.PostalCode;
+                user.PhoneNumber = this.Input.PhoneNumber;
+
+                IdentityResult result = await this.userManager.CreateAsync(user, this.Input.Password);
 
                 if (result.Succeeded)
                 {
