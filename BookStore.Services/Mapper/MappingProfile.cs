@@ -11,6 +11,8 @@ namespace BookStore.Services.Mapper
         {
             this.CreateMap<Category, CategoryDto>()
                 .ForSourceMember(category => category.Products, dto => dto.DoNotValidate());
+
+            this.CreateMap<Product, ProductDto>();
         }
     }
 }

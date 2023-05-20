@@ -1,5 +1,9 @@
-﻿using BookStore.Infrastructure.Models;
+﻿using AutoMapper;
+
+using BookStore.Infrastructure.Models;
 using BookStore.Infrastructure.Repository.Contracts;
+using BookStore.Services.Contracts;
+using BookStore.Services.DTO;
 using BookStore.Web.ViewModels;
 
 using Microsoft.AspNetCore.Hosting;
@@ -18,75 +22,45 @@ namespace BookStore.Web.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly IProductService productService;
+        private readonly ICategoryService categoryService;
+        private readonly IMapper mapper;
 
-        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
+        public ProductController(
+            IUnitOfWork unitOfWork,
+            IWebHostEnvironment webHostEnvironment,
+            IProductService productService,
+            ICategoryService categoryService,
+            IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             this.webHostEnvironment = webHostEnvironment;
+            this.productService = productService;
+            this.categoryService = categoryService;
+            this.mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IActionResult> IndexAsync()
+        public IActionResult Index()
         {
-            IEnumerable<Product> dbProducts = await this.unitOfWork.ProductRepository.GetAllAsync("Category");
-
-            IEnumerable<ProductViewModel> products = dbProducts.Select((product) => new ProductViewModel
-            {
-                Id = product.Id,
-                Title = product.Title,
-                Description = product.Description,
-                ISBN = product.ISBN,
-                Author = product.Author,
-                ListPrice = product.ListPrice,
-                Price = product.Price,
-                Price50 = product.Price50,
-                Price100 = product.Price100,
-                ImageUrl = product.ImageUrl,
-                CategoryId = product.CategoryId,
-                Category = product.Category,
-            });
-
-            return this.View(products);
+            return this.View();
         }
 
         [HttpGet]
         public async Task<IActionResult> UpsertAsync(Guid? id)
         {
-            IEnumerable<Category> dbCategories = await this.unitOfWork.CategoryRepository.GetAllAsync();
-            IEnumerable<CategoryViewModel> categoryList = dbCategories.Select((category) => new CategoryViewModel
-            {
-                Id = category.Id,
-                Name = category.Name,
-                DisplayOrder = category.DisplayOrder,
-            });
+            IEnumerable<CategoryDto> serviceCategories = 
+                await this.categoryService.GetAllAsync();
+            IEnumerable<CategoryViewModel> categories =
+                this.mapper.Map<IEnumerable<CategoryViewModel>>(serviceCategories);
 
-            ProductViewModel productViewModel = new ProductViewModel();
-            productViewModel.Categories = categoryList;
+            ProductViewModel? productViewModel = id is null
+                ? new ProductViewModel { Categories = categories }
+                : await this.GetProductViewModelByIdAsync((Guid)id, categories);
 
-            if (id is null)
-            {
-                return this.View(productViewModel);
-            }
-
-            Product? product = await this.unitOfWork.ProductRepository.GetByIdAsync(id);
-            if (product is null)
-            {
-                return this.NotFound();
-            }
-
-            productViewModel.Id = product.Id;
-            productViewModel.Title = product.Title;
-            productViewModel.Description = product.Description;
-            productViewModel.ISBN = product.ISBN;
-            productViewModel.Author = product.Author;
-            productViewModel.ListPrice = product.ListPrice;
-            productViewModel.Price = product.Price;
-            productViewModel.Price50 = product.Price50;
-            productViewModel.Price100 = product.Price100;
-            productViewModel.CategoryId = product.CategoryId;
-            productViewModel.ImageUrl = product.ImageUrl;
-
-            return this.View(productViewModel);
+            return productViewModel is null 
+                ? this.NotFound() 
+                : this.View(productViewModel);
         }
 
         [HttpPost]
@@ -149,24 +123,8 @@ namespace BookStore.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            IEnumerable<Product> dbProducts = await this.unitOfWork.ProductRepository.GetAllAsync("Category");
-
-            IEnumerable<ProductViewModel> products = dbProducts.Select((product) => new ProductViewModel
-            {
-                Id = product.Id,
-                Title = product.Title,
-                Description = product.Description,
-                ISBN = product.ISBN,
-                Author = product.Author,
-                ListPrice = product.ListPrice,
-                Price = product.Price,
-                Price50 = product.Price50,
-                Price100 = product.Price100,
-                ImageUrl = product.ImageUrl,
-                CategoryId = product.CategoryId,
-                Category = product.Category,
-            });
-
+            IEnumerable<ProductDto> serviceProducts = await this.productService.GetAllAsync();
+            IEnumerable<ProductViewModel> products = this.mapper.Map<IEnumerable<ProductViewModel>>(serviceProducts);
             return this.Json(new { data = products });
         }
 
@@ -219,6 +177,20 @@ namespace BookStore.Web.Areas.Admin.Controllers
             await this.unitOfWork.SaveAsync();
             
             return this.Json(new { success = true, message = "Delete successful." });
+        }
+
+        private async Task<ProductViewModel?> GetProductViewModelByIdAsync(Guid id, IEnumerable<CategoryViewModel> categories)
+        {
+            ProductDto? product = await this.productService.GetByGuidAsync(id);
+            if (product is null)
+            {
+                return null;
+            }
+
+            ProductViewModel productViewModel = this.mapper.Map<ProductViewModel>(product);
+            productViewModel.Categories = categories;
+
+            return productViewModel;
         }
     }
 }

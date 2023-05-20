@@ -10,6 +10,8 @@ namespace BookStore.Web.Mapper
         public MappingProfile()
         {
             this.CreateMap<CategoryDto, CategoryViewModel>();
+
+            this.CreateMap<ProductDto, ProductViewModel>();
         }
     }
 }
