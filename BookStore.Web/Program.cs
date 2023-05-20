@@ -1,18 +1,20 @@
+using BookStore.Common;
 using BookStore.Infrastructure.Data;
 using BookStore.Infrastructure.Repository;
 using BookStore.Infrastructure.Repository.Contracts;
+using BookStore.Services;
+using BookStore.Services.Contracts;
+using BookStore.Web.Extensions;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Identity;
+
 using System;
-using BookStore.Infrastructure.Models;
-using BookStore.Web.Extensions;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using BookStore.Common;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,10 @@ builder.Services.AddRazorPages();
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
 builder.Services.AddDbContext<BookStoreDbContext>((options) => 
     options.UseSqlServer(connectionString));
+
+builder.Services.AddAutoMapper(
+    typeof(BookStore.Services.Mapper.MappingProfile).Assembly,
+    typeof(BookStore.Web.Mapper.MappingProfile).Assembly);
 
 builder.Services.AddIdentity<BookStoreUser, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<BookStoreDbContext>()
@@ -37,6 +43,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 WebApplication app = builder.Build();
 

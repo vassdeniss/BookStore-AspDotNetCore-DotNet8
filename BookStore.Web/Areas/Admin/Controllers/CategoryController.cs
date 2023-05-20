@@ -1,35 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 
-using BookStore.Infrastructure.Models;
-using BookStore.Infrastructure.Repository.Contracts;
+using BookStore.Services.Contracts;
+using BookStore.Services.DTO;
 using BookStore.Web.ViewModels;
 
 using Microsoft.AspNetCore.Mvc;
+
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BookStore.Web.Areas.Admin.Controllers
 {
     public class CategoryController : BaseAdminController
     {
-        private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
+        private readonly ICategoryService service;
 
-        public CategoryController(IUnitOfWork unitOfWork)
+        public CategoryController(IMapper mapper, ICategoryService service)
         {
-            this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
+            this.service = service;
         }
 
         [HttpGet]
         public async Task<IActionResult> IndexAsync()
         {
-            IEnumerable<Category> dbCategories = await this.unitOfWork.CategoryRepository.GetAllAsync();
-            IEnumerable<CategoryViewModel> categories = dbCategories.Select((category) => new CategoryViewModel
-            {
-                Name = category.Name,
-                DisplayOrder = category.DisplayOrder,
-            });
-
+            IEnumerable<CategoryDto> serviceCategories = await this.service.GetAllAsync();
+            IEnumerable<CategoryViewModel> categories = this.mapper.Map<IEnumerable<CategoryViewModel>>(serviceCategories);
             return this.View(categories);
         }
 
@@ -47,14 +45,7 @@ namespace BookStore.Web.Areas.Admin.Controllers
                 return this.View();
             }
 
-            Category dbCategory = new Category()
-            {
-                Name = category.Name,
-                DisplayOrder = category.DisplayOrder,
-            };
-
-            await this.unitOfWork.CategoryRepository.AddAsync(dbCategory);
-            await this.unitOfWork.SaveAsync();
+            await this.service.CreateAsync(category.Name, category.DisplayOrder);
 
             this.TempData["SuccessMessage"] = "Category created successfully!";
             return this.RedirectToAction("Index");
@@ -68,20 +59,14 @@ namespace BookStore.Web.Areas.Admin.Controllers
                 return this.NotFound();
             }
 
-            Category? category = await this.unitOfWork.CategoryRepository.GetByIdAsync(id);
-            if (category is null)
+            CategoryDto? dto = await this.service.GetByGuidAsync((Guid)id);
+            if (dto is null)
             {
                 return this.NotFound();
             }
 
-            CategoryViewModel categoryViewModel = new CategoryViewModel
-            {
-                Id = category.Id,
-                Name = category.Name,
-                DisplayOrder = category.DisplayOrder,
-            };
-
-            return this.View(categoryViewModel);
+            CategoryViewModel category = this.mapper.Map<CategoryViewModel>(dto);
+            return this.View(category);
         }
 
         [HttpPost]
@@ -92,14 +77,7 @@ namespace BookStore.Web.Areas.Admin.Controllers
                 return this.View();
             }
 
-            Category dbCategory = (await this.unitOfWork.CategoryRepository.GetByIdAsync(category.Id))!;
-
-            dbCategory.Name = category.Name;
-            dbCategory.DisplayOrder = category.DisplayOrder;
-
-            this.unitOfWork.CategoryRepository.Update(dbCategory);
-
-            await this.unitOfWork.SaveAsync();
+            await this.service.EditAsync(category.Id, category.Name, category.DisplayOrder);
 
             this.TempData["SuccessMessage"] = "Category edited successfully!";
             return this.RedirectToAction("Index");
@@ -113,35 +91,21 @@ namespace BookStore.Web.Areas.Admin.Controllers
                 return this.NotFound();
             }
 
-            Category? category = await this.unitOfWork.CategoryRepository.GetByIdAsync(id);
-            if (category is null)
+            CategoryDto? dto = await this.service.GetByGuidAsync((Guid)id);
+            if (dto is null)
             {
                 return this.NotFound();
             }
 
-            CategoryViewModel categoryViewModel = new CategoryViewModel
-            {
-                Id = category.Id,
-                Name = category.Name,
-                DisplayOrder = category.DisplayOrder,
-            };
-
-            return this.View(categoryViewModel);
+            CategoryViewModel category = this.mapper.Map<CategoryViewModel>(dto);
+            return this.View(category);
         }
 
         [HttpPost]
         [ActionName("Delete")]
-        public async Task<IActionResult> DeletePostAsync(Guid? id)
+        public async Task<IActionResult> DeletePostAsync(Guid id)
         {
-            Category? category = await this.unitOfWork.CategoryRepository.GetByIdAsync(id!);
-            if (category is null)
-            {
-                return this.NotFound();
-            }
-
-            this.unitOfWork.CategoryRepository.Remove(category);
-            await this.unitOfWork.SaveAsync();
-
+            await this.service.DeleteAsync(id);
             this.TempData["SuccessMessage"] = "Category deleted successfully!";
             return this.RedirectToAction("Index");
         }
